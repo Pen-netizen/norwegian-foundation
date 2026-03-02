@@ -20,7 +20,7 @@ function drawFlashcard(area, lessonNum) {
     area.innerHTML = `
       <div style="text-align:center;padding:20px;font-family:var(--font)">
         <div style="font-size:28px;margin-bottom:8px">✓</div>
-        <div style="font-size:16px;margin-bottom:14px">Alle kort gjort!</div>
+        <div style="font-size:16px;margin-bottom:14px">All cards done!</div>
         <button class="btn btn-green" onclick="renderFlashcard(document.getElementById('mgArea'),LESSONS_DATA[${lessonNum}],${lessonNum})">↺ Igjen</button>
       </div>`;
     return;
@@ -44,8 +44,8 @@ function drawFlashcard(area, lessonNum) {
     <div class="fc-controls">
       <button class="btn" onclick="TTS.speak('${safeNo}')">▶ Hør</button>
       ${s.flipped
-        ? `<button class="btn btn-green"  onclick="fcNext(true,${lessonNum})">✓ Kan det</button>
-           <button class="btn btn-red"    onclick="fcNext(false,${lessonNum})">✗ Prøv igjen</button>`
+        ? `<button class="btn btn-green"  onclick="fcNext(true,${lessonNum})">✓ Got it</button>
+           <button class="btn btn-red"    onclick="fcNext(false,${lessonNum})">✗ Try again</button>`
         : `<button class="btn" onclick="fcFlip(${lessonNum})">Snu kortet</button>`}
       <span style="font-family:var(--font);font-size:11px;color:var(--ink3);align-self:center">${s.index + 1}/${total}</span>
     </div>`;
@@ -76,7 +76,7 @@ function renderFillBlank(area, ld, lessonNum) {
   const items = shuffle([...(ld.fillBlanks || [])]);
   fbState = { items, index: 0, tries: 0 };
   if (items.length === 0) {
-    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">Ingen fill-in øvelser for denne leksjonen ennå.</div>';
+    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">No fill-in exercises for this lesson yet.</div>';
     return;
   }
   drawFillBlank(area, lessonNum);
@@ -129,7 +129,7 @@ function fbCheck(lessonNum) {
   input.classList.add(ok ? 'correct' : 'wrong');
 
   if (ok) {
-    fb.textContent = '✓ Riktig!';
+    fb.textContent = '✓ Correct!';
     fb.className   = 'fb-feedback ok';
     const xp = fbState.tries === 0 ? XP.EXERCISE_CORRECT_FIRST : XP.EXERCISE_CORRECT_RETRY;
     addXP(xp, input);
@@ -139,7 +139,7 @@ function fbCheck(lessonNum) {
     fbState.tries = 0;
     setTimeout(() => drawFillBlank(null, lessonNum), 900);
   } else {
-    fb.innerHTML = `✗ Ikke helt riktig. Prøv igjen! ${q.hint ? `<em>(hint: ${q.hint})</em>` : ''}`;
+    fb.innerHTML = `✗ Ikke helt riktig. Try again! ${q.hint ? `<em>(hint: ${q.hint})</em>` : ''}`;
     fb.className = 'fb-feedback err';
     fbState.tries++;
     setTimeout(() => {
@@ -165,7 +165,7 @@ function renderMultiChoice(area, ld, lessonNum) {
   const items = shuffle([...(ld.multiChoice || [])]);
   mcState = { items, index: 0 };
   if (items.length === 0) {
-    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">Ingen flervalgsøvelser for denne leksjonen ennå.</div>';
+    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">No multiple choice exercises for this lesson yet.</div>';
     return;
   }
   drawMultiChoice(area, lessonNum);
@@ -207,7 +207,7 @@ function mcPick(chosen, correct, lessonNum, optText) {
 
   if (chosen === correct) {
     if (correctEl) correctEl.classList.add('correct-ans');
-    if (fb) { fb.textContent = '✓ Riktig!'; fb.className = 'fb-feedback ok'; }
+    if (fb) { fb.textContent = '✓ Correct!'; fb.className = 'fb-feedback ok'; }
     addXP(XP.EXERCISE_CORRECT_FIRST, chosenEl || document.getElementById('mgArea'));
     markReviewed(lessonNum, optText);
     saveToSession();
@@ -230,7 +230,7 @@ let ddState = { sentence: null, slots: [], placed: [], words: [] };
 function renderDragDrop(area, ld, lessonNum) {
   const sentences = ld.sentences || [];
   if (sentences.length === 0) {
-    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">Ingen drag-drop øvelser ennå.</div>';
+    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">No drag-drop exercises yet.</div>';
     return;
   }
   // Pick a random sentence and scramble its words
@@ -260,7 +260,7 @@ function drawDragDrop(area, lessonNum) {
 
   area.innerHTML = `
     <div style="font-family:var(--font);font-size:12px;color:var(--ink3);margin-bottom:8px">
-      Sett ordene i riktig rekkefølge:
+      Put the words in the correct order:
     </div>
     <div style="font-family:var(--font);font-size:12px;color:var(--ink3);margin-bottom:4px">
       (${s.sentence.en})
@@ -309,7 +309,7 @@ function ddCheck(lessonNum) {
   const placed  = ddState.placed;
   const fb      = document.getElementById('ddFeedback');
   const allFilled = placed.every(Boolean);
-  if (!allFilled) { if (fb) { fb.textContent = 'Fyll alle plassene først.'; fb.className = 'fb-feedback err'; } return; }
+  if (!allFilled) { if (fb) { fb.textContent = 'Fill all slots first.'; fb.className = 'fb-feedback err'; } return; }
 
   let allRight = true;
   ddState.words.forEach((w, i) => {
@@ -320,7 +320,7 @@ function ddCheck(lessonNum) {
   });
 
   if (allRight) {
-    if (fb) { fb.textContent = '✓ Perfekt! Setningen er riktig.'; fb.className = 'fb-feedback ok'; }
+    if (fb) { fb.textContent = '✓ Perfect! Sentence is correct.'; fb.className = 'fb-feedback ok'; }
     addXP(XP.DRAG_DROP_COMPLETE, document.getElementById('mgArea'));
     saveToSession();
     setTimeout(() => renderDragDrop(document.getElementById('mgArea'), LESSONS_DATA[lessonNum], lessonNum), 1400);
@@ -343,7 +343,7 @@ function ddReset(lessonNum) {
 function renderDecayReview(area, ld, lessonNum) {
   const decayed = (ld.vocab || []).filter(v => isDecayed(lessonNum, v.id));
   if (decayed.length === 0) {
-    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">Ingen ord har forfalt ennå! Kom tilbake om noen dager.</div>';
+    area.innerHTML = '<div style="padding:16px;font-family:var(--font)">No words have decayed yet! Come back in a few days.</div>';
     return;
   }
   // Use flashcard-style review on just the decayed items
@@ -358,8 +358,8 @@ function drawDecayCard(area, lessonNum) {
   if (s.index >= s.items.length) {
     area.innerHTML = `
       <div style="text-align:center;padding:20px;font-family:var(--font)">
-        <div style="font-size:22px;margin-bottom:8px">✓ Repetisjon fullført!</div>
-        <div style="font-size:14px;margin-bottom:14px;color:var(--ink3)">Alle forfalne ord er gjennomgått.</div>
+        <div style="font-size:22px;margin-bottom:8px">✓ Review complete!</div>
+        <div style="font-size:14px;margin-bottom:14px;color:var(--ink3)">All decayed words have been reviewed.</div>
         <button class="btn btn-green" onclick="renderDecayReview(document.getElementById('mgArea'),LESSONS_DATA[${lessonNum}],${lessonNum})">↺ Igjen</button>
       </div>`;
     return;
@@ -370,7 +370,7 @@ function drawDecayCard(area, lessonNum) {
 
   area.innerHTML = `
     <div class="decay-banner" style="margin-bottom:12px">
-      ⏰ Repetisjon av forfalt ord ${s.index + 1}/${s.items.length}
+      ⏰ Review of decayed word ${s.index + 1}/${s.items.length}
     </div>
     <div class="flashcard" onclick="drFlip(${lessonNum})">
       <div class="fc-front">${s.flipped ? item.no : item.en}</div>
@@ -381,8 +381,8 @@ function drawDecayCard(area, lessonNum) {
     <div class="fc-controls">
       <button class="btn" onclick="TTS.speak('${safeNo}')">▶ Hør</button>
       ${s.flipped
-        ? `<button class="btn btn-green" onclick="drNext(true,${lessonNum})">✓ Husket det</button>
-           <button class="btn btn-red"   onclick="drNext(false,${lessonNum})">✗ Prøv igjen</button>`
+        ? `<button class="btn btn-green" onclick="drNext(true,${lessonNum})">✓ I knew it</button>
+           <button class="btn btn-red"   onclick="drNext(false,${lessonNum})">✗ Try again</button>`
         : `<button class="btn" onclick="drFlip(${lessonNum})">Snu kortet</button>`}
     </div>`;
 }

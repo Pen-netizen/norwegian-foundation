@@ -50,10 +50,10 @@
   padding-bottom: 5px;
   margin-bottom: 7px;
 }
-.sticky-red  { background: #ffe0e0; color: #c0202020; left: calc(50% - 650px); top: 22%; transform: rotate(-2deg); }
+.sticky-red  { background: #ffe0e0; color: #c0202020; left: calc(50% - 760px); top: 22%; transform: rotate(-2deg); }
 .sticky-red .sn-pin  { background: radial-gradient(circle at 35% 35%, #e04040, #8a0000); }
 .sticky-red .sn-body { background: #ffe0e0; color: #4a1010; }
-.sticky-blue { background: #ddeeff; right: calc(50% - 650px); top: 18%; transform: rotate(1.5deg); }
+.sticky-blue { background: #ddeeff; right: calc(50% - 760px); top: 18%; transform: rotate(1.5deg); }
 .sticky-blue .sn-pin { background: radial-gradient(circle at 35% 35%, #4080d0, #1a3a80); }
 .sticky-blue .sn-body { background: #ddeeff; color: #1a2a4a; }
 .sticky-entry { display: flex; justify-content: space-between; padding: 1px 0; }
@@ -234,10 +234,10 @@
 
 /* ===== DESKTOP ===== */
 #screen-desktop {
-  background: var(--green);
+  background: #c8e69e;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
-    linear-gradient(135deg, #c8e69e 0%, #b8d88e 50%, #c0e298 100%);
+    linear-gradient(135deg, #c8e69e 0%, #b0d880 40%, #85ec57 100%);
   position: relative;
 }
 
@@ -356,6 +356,10 @@
   transition: all 0.1s;
   position: relative;
 }
+.app-icon:nth-child(1) .app-icon-img { background: #c8e69e; }
+.app-icon:nth-child(2) .app-icon-img { background: #ff7676; color: white; }
+.app-icon:nth-child(3) .app-icon-img { background: #85ec57; }
+.app-icon:nth-child(4) .app-icon-img { background: #fd5757; color: white; }
 .app-icon:hover .app-icon-img {
   transform: translate(-1px,-2px);
   box-shadow: 4px 5px 0 var(--ink);
@@ -890,16 +894,16 @@
             </div>
           </div>
           <div class="boot-choices" id="bootChoices">
-            <button class="boot-btn" onclick="bootFresh()">Ny bruker — start fresh</button>
-            <button class="boot-btn" onclick="bootShowLoad()">Last lagret fremgang</button>
+            <button class="boot-btn" onclick="bootFresh()">New user — start fresh</button>
+            <button class="boot-btn" onclick="bootShowLoad()">Load saved progress</button>
           </div>
           <div class="boot-load-area" id="bootLoadArea">
-            <input class="boot-code-input" id="bootCodeInput" placeholder="SKRIV KOD HER — skriv inn lagringskoden..." autocomplete="off" autocorrect="off" spellcheck="false">
-            <button class="boot-btn" onclick="bootLoadCode()">▶ Last inn</button>
+            <input class="boot-code-input" id="bootCodeInput" placeholder="ENTER YOUR SAVE CODE HERE..." autocomplete="off" autocorrect="off" spellcheck="false">
+            <button class="boot-btn" onclick="bootLoadCode()">▶ Load</button>
             <div class="boot-err" id="bootErr"></div>
-            <button class="boot-back" onclick="bootHideLoad()">← tilbake</button>
+            <button class="boot-back" onclick="bootHideLoad()">← back</button>
           </div>
-          <div class="boot-small">TRYKK FOR Å BEGYNNE</div>
+          <div class="boot-small">PRESS TO BEGIN</div>
         </div>
 
         <!-- ===== DESKTOP SCREEN ===== -->
@@ -909,7 +913,7 @@
             <span class="topbar-brand">🇳🇴 NORSK</span>
             <div class="topbar-sep"></div>
             <div class="topbar-xp" id="topbar-xp">0 XP</div>
-            <button class="topbar-save" onclick="openApp('settings')">💾 LAGRE</button>
+            <button class="topbar-save" onclick="openApp('settings')">💾 SAVE</button>
           </div>
 
           <!-- DESKTOP AREA -->
@@ -921,19 +925,19 @@
             <div class="icons-cluster">
               <div class="app-icon" onclick="openApp('lessons')">
                 <div class="app-icon-img">📚</div>
-                <div class="app-icon-label">Leksjoner</div>
+                <div class="app-icon-label">Lessons</div>
               </div>
               <div class="app-icon" onclick="openApp('alphabet')">
                 <div class="app-icon-img">Æ</div>
-                <div class="app-icon-label">Alfabetet</div>
+                <div class="app-icon-label">Alphabet</div>
               </div>
               <div class="app-icon" onclick="openApp('dictionary')">
                 <div class="app-icon-img">📖</div>
-                <div class="app-icon-label">Ordbok</div>
+                <div class="app-icon-label">Dictionary</div>
               </div>
               <div class="app-icon" onclick="openApp('settings')">
                 <div class="app-icon-img">⚙️</div>
-                <div class="app-icon-label">Innstillinger</div>
+                <div class="app-icon-label">Settings</div>
               </div>
             </div>
 
@@ -959,6 +963,8 @@
               <span class="music-label">LO-FI · NORSK GRUNNLAG</span>
               <audio id="bgMusic" loop>
                 <source src="audio/lofi-track.mp3" type="audio/mpeg">
+                <source src="audio/lofi-track.ogg" type="audio/ogg">
+                <source src="audio/lofi-track.wav" type="audio/wav">
               </audio>
             </div>
           </div>
@@ -990,8 +996,6 @@ const LESSONS_DATA = {};
 <script src="js/tts.js"></script>
 <script src="js/apps/minigames.js"></script>
 <script src="js/apps/lessons.js"></script>
-<script src="js/apps/alphabet.js"></script>
-<script src="js/apps/dictionary.js"></script>
 <script src="js/apps/settings.js"></script>
 <script src="js/desktop.js"></script>
 

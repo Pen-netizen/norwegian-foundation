@@ -65,7 +65,7 @@ function openApp(appId) {
   });
 
   switch(appId) {
-    case 'lessons':    title.textContent = '📚 Leksjoner'; renderLessonsApp(body); break;
+    case 'lessons':    title.textContent = '📚 Lessons'; renderLessonsApp(body); break;
     case 'alphabet':   title.textContent = 'Æ Alfabetet'; renderAlphabetApp(body); break;
     case 'dictionary': title.textContent = '📖 Ordbok'; renderDictionaryApp(body); break;
     case 'settings':   title.textContent = '⚙ Innstillinger'; renderSettingsApp(body); break;
@@ -87,16 +87,14 @@ document.getElementById('windowOverlay').addEventListener('click', (e) => {
 function toggleMusic() {
   const audio = document.getElementById('bgMusic');
   const btn   = document.getElementById('musicBtn');
-  if (!audio.src || audio.src.endsWith('undefined')) {
-    showToast('♪ Musikk kommer snart — legg til lofi-track.mp3 i /audio/');
-    return;
-  }
   if (musicPlaying) {
     audio.pause();
     btn.textContent = '▶';
     musicPlaying = false;
   } else {
-    audio.play().catch(() => showToast('Musikk er ikke lastet inn ennå.'));
+    audio.play().catch(e => {
+      showToast('♪ Add lofi-track.mp3 to the /audio/ folder to enable music');
+    });
     btn.textContent = '❚❚';
     musicPlaying = true;
   }
@@ -113,7 +111,7 @@ function showToast(msg, dur = 2500) {
 
 function showUnlock(lessonNum) {
   const el = document.getElementById('unlockBanner');
-  el.innerHTML = `🔓 Leksjon ${lessonNum} er låst opp! <br><span style="font-size:12px">+${XP.TEST_PASS} XP</span>`;
+  el.innerHTML = `🔓 Lesson ${lessonNum} unlocked! <br><span style="font-size:12px">+${XP.TEST_PASS} XP</span>`;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3500);
 }

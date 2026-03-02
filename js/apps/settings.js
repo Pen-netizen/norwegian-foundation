@@ -6,7 +6,7 @@ function renderAlphabetApp(container) {
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div style="padding:10px 14px;border-bottom:2px solid var(--ink);background:var(--paper2);flex-shrink:0">
         <div style="font-family:var(--font);font-size:12px;color:var(--ink3);letter-spacing:1px">
-          Klikk en bokstav for detaljer · Trykk ▶ for å høre uttalen
+          Click a letter for details · Press ▶ to hear pronunciation
         </div>
       </div>
       <div style="flex:1;overflow-y:auto;padding:12px">
@@ -123,31 +123,31 @@ function renderSettingsApp(container) {
     <div class="settings-body" style="overflow-y:auto;height:100%">
 
       <div class="settings-section">
-        <div class="settings-title">💾 Lagre fremgang</div>
-        <div class="settings-label">LAGRINGSKODE — kopier og oppbevar denne</div>
+        <div class="settings-title">💾 Save Progress</div>
+        <div class="settings-label">SAVE CODE — copy and keep this safe</div>
         <div class="save-code-display" id="saveCodeDisplay" onclick="this.select()" title="Klikk for å velge alt">
-          Genererer kode...
+          Generating code...
         </div>
         <div class="settings-note">
-          Denne koden inneholder all din fremgang: XP, låste leksjoner, streak, og ordtilstand.
+          This code contains all your progress: XP, unlocked lessons, streak, and word states. Copy it somewhere safe. Enter it on the boot screen to restore your progress.
           Kopier den et trygt sted. Skriv den inn på boot-skjermen for å laste inn fremgang.
         </div>
-        <button class="btn btn-green" style="margin-top:10px" onclick="settingsGenerate()">↺ Oppdater kode</button>
+        <button class="btn btn-green" style="margin-top:10px" onclick="settingsGenerate()">↺ Refresh code</button>
       </div>
 
       <div class="settings-section">
-        <div class="settings-title">📥 Last inn lagret fremgang</div>
-        <div class="settings-label">SKRIV INN KODE</div>
+        <div class="settings-title">📥 Load Saved Progress</div>
+        <div class="settings-label">ENTER CODE</div>
         <input class="load-code-input" id="loadCodeInput" type="text"
           autocomplete="off" autocorrect="off" spellcheck="false"
-          placeholder="SKRIV INN LAGRINGSKODEN DIN..."
+          placeholder="ENTER YOUR SAVE CODE HERE..."
           onkeydown="if(event.key==='Enter') settingsLoad()">
-        <button class="btn" onclick="settingsLoad()">Last inn →</button>
+        <button class="btn" onclick="settingsLoad()">Load →</button>
         <div class="settings-msg" id="settingsMsg"></div>
       </div>
 
       <div class="settings-section">
-        <div class="settings-title">📊 Din statistikk</div>
+        <div class="settings-title">📊 Your Stats</div>
         <div class="stats-display">
           <div class="stat-box">
             <span class="stat-box-val" id="statXP">${STATE.xp}</span>
@@ -169,7 +169,7 @@ function renderSettingsApp(container) {
       </div>
 
       <div class="settings-section">
-        <div class="settings-title">🔤 Spesialtegn</div>
+        <div class="settings-title">🔤 Special Characters</div>
         <div style="font-family:var(--font);font-size:13px;line-height:1.7;color:var(--ink)">
           Denne appen godtar svar uten norske spesialtegn. Du kan skrive:<br>
           <strong>æ → ae</strong> &nbsp;&nbsp; <strong>ø → oe</strong> eller <strong>o</strong>
@@ -179,7 +179,7 @@ function renderSettingsApp(container) {
       </div>
 
       <div class="settings-section">
-        <div class="settings-title">🎵 Musikk</div>
+        <div class="settings-title">🎵 Music</div>
         <div style="font-family:var(--font);font-size:13px;color:var(--ink3)">
           For å aktivere musikk: legg en fil kalt <strong>lofi-track.mp3</strong>
           i mappen <strong>/audio/</strong> i prosjektet.<br>
@@ -209,11 +209,11 @@ function settingsGenerate() {
 function settingsLoad() {
   const raw = (document.getElementById('loadCodeInput')?.value || '').trim();
   const msg = document.getElementById('settingsMsg');
-  if (!raw) { if (msg) { msg.textContent = 'Skriv inn en kode.'; msg.className = 'settings-msg err'; } return; }
+  if (!raw) { if (msg) { msg.textContent = 'Enter a code first.'; msg.className = 'settings-msg err'; } return; }
 
   const ok = loadSaveCode(raw);
   if (ok) {
-    if (msg) { msg.textContent = '✓ Lastet inn! Fremgang gjenopprettet.'; msg.className = 'settings-msg ok'; }
+    if (msg) { msg.textContent = '✓ Loaded! Progress restored.'; msg.className = 'settings-msg ok'; }
     updateTopBarXP();
     updateDesktopStats();
     saveToSession();
@@ -228,6 +228,6 @@ function settingsLoad() {
     });
     settingsGenerate();
   } else {
-    if (msg) { msg.textContent = '✗ Ugyldig kode. Sjekk og prøv igjen.'; msg.className = 'settings-msg err'; }
+    if (msg) { msg.textContent = '✗ Invalid code. Check and try again.'; msg.className = 'settings-msg err'; }
   }
 }

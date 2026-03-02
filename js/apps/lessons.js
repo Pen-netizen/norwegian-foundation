@@ -31,7 +31,7 @@ let currentTab    = 'study';
 function renderLessonsApp(container) {
   container.innerHTML = `
     <div class="lesson-list">
-      <div class="lesson-list-title">📚 Velg en leksjon</div>
+      <div class="lesson-list-title">📚 Choose a lesson</div>
       <div id="lessonRows"></div>
     </div>`;
   renderLessonRows();
@@ -52,7 +52,7 @@ function renderLessonRows() {
         <div class="lesson-sub">${m.sub}</div>
       </div>
       ${unlocked
-        ? `<div class="lesson-badge">${score >= 85 ? '✓ BESTÅTT' : 'ÅPEN'}</div>
+        ? `<div class="lesson-badge">${score >= 85 ? '✓ DONE' : 'OPEN'}</div>
            ${score > 0 ? `<div class="lesson-score">${score}%</div>` : ''}`
         : `<div class="lesson-badge locked-badge">🔒</div>`}
     </div>`;
@@ -119,9 +119,9 @@ function renderStudyTab(panel) {
   const safeNo = s => (s||'').replace(/'/g, '&apos;');
 
   panel.innerHTML = `
-    <div class="study-intro">LEKSJON ${currentLesson} · ${ld.subtitle}</div>
+    <div class="study-intro">LESSON ${currentLesson} · ${ld.subtitle}</div>
 
-    <div class="study-section-title">Ordforråd</div>
+    <div class="study-section-title">Vocabulary</div>
     <table class="vocab-table">
       <thead>
         <tr><th>Norsk</th><th>Engelsk</th><th>Merknad</th><th></th></tr>
@@ -139,14 +139,14 @@ function renderStudyTab(panel) {
       </tbody>
     </table>
 
-    <div class="study-section-title">Grammatikk</div>
+    <div class="study-section-title">Grammar</div>
     ${(ld.grammar || []).map(g => `
     <div class="grammar-card">
       <div class="grammar-card-title">${g.title}</div>
       <div class="grammar-card-body">${g.content}</div>
     </div>`).join('')}
 
-    <div class="study-section-title">Eksempelsetninger</div>
+    <div class="study-section-title">Example Sentences</div>
     ${(ld.sentences || []).map(s => `
     <div class="tts-sentence-row">
       <span class="sno">${s.no}</span>
@@ -211,14 +211,14 @@ function renderReadTab(panel) {
 
   panel.innerHTML = `
     <div class="read-controls">
-      <button class="btn" onclick="readSpeakAll()">▶ Hør teksten</button>
-      <button class="btn" onclick="TTS.cancel()">■ Stopp</button>
+      <button class="btn" onclick="readSpeakAll()">▶ Listen</button>
+      <button class="btn" onclick="TTS.cancel()">■ Stop</button>
       <span style="font-family:var(--font);font-size:11px;color:var(--ink3);margin-left:8px;">
-        Uthevede ord = leksjon ${currentLesson} · Grå = ikke lært ennå
+        Highlighted words = lesson ${currentLesson} · Grey = not yet learned
       </span>
     </div>
     <div class="read-task" id="readTask">
-      👆 Klikk på et <strong style="color:#1a5a2a">uthevet ord</strong> for å høre det uttalt.
+      👆 Click a <strong style="color:#1a5a2a">highlighted word</strong> to hear it spoken.
     </div>
     <div class="read-extract">
       <div class="extract-title">${EXTRACT.title}</div>
@@ -261,7 +261,7 @@ function readWordClick(el, word) {
   markReviewed(currentLesson, word);
   saveToSession();
   const task = document.getElementById('readTask');
-  if (task) task.innerHTML = `▶ Hørte: <strong>${word}</strong> — klikk igjen for å høre på nytt.`;
+  if (task) task.innerHTML = `▶ Heard: <strong>${word}</strong> — click again to replay.`;
 }
 
 function readSpeakAll() {
@@ -300,7 +300,7 @@ function drawTestQuestion(panel) {
   panel.innerHTML = `
     <div class="test-header">
       <div class="test-title">✏️ Test — Leksjon ${currentLesson}</div>
-      <div class="test-sub">85 % nødvendig for å låse opp neste leksjon. Ingen straff for forsøk.</div>
+      <div class="test-sub">85% needed to unlock the next lesson. No penalty for retrying.</div>
     </div>
     <div class="test-progress">
       ${qs.map((_, i) => {
@@ -308,14 +308,14 @@ function drawTestQuestion(panel) {
         return `<div class="test-pip ${a === undefined ? '' : a ? 'pass' : 'fail'}"></div>`;
       }).join('')}
     </div>
-    <div class="test-q-num">SPØRSMÅL ${n} / ${qs.length}</div>
+    <div class="test-q-num">QUESTION ${n} / ${qs.length}</div>
     <div class="test-question">${q.q}</div>
     <input class="test-input" id="testInput" type="text"
       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-      placeholder="Skriv svaret ditt..."
+      placeholder="Type your answer..."
       onkeydown="if(event.key==='Enter') testCheck()">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-      <button class="btn btn-green" onclick="testCheck()">Svar →</button>
+      <button class="btn btn-green" onclick="testCheck()">Answer →</button>
       <button class="btn" onclick="TTS.speak('${safeQ}')">▶ Hør</button>
     </div>
     <div class="fb-feedback" id="testFb" style="margin-top:10px;min-height:18px"></div>`;
@@ -339,11 +339,11 @@ function testCheck() {
   input.disabled = true;
 
   if (ok) {
-    fb.textContent = '✓ Riktig!';
+    fb.textContent = '✓ Correct!';
     fb.className   = 'fb-feedback ok';
     addXP(XP.EXERCISE_CORRECT_FIRST, input);
   } else {
-    fb.innerHTML   = `✗ Riktig svar: <strong>${q.answer}</strong>`;
+    fb.innerHTML   = `✗ Correct answer: <strong>${q.answer}</strong>`;
     fb.className   = 'fb-feedback err';
   }
 
@@ -382,16 +382,16 @@ function showTestResult(panel) {
       <div class="test-result-score">${pct}%</div>
       <div class="test-result-msg">
         ${pass
-          ? `✓ Bestått! ${firstPass && currentLesson < 19 ? `Leksjon ${currentLesson + 1} er låst opp!` : ''}`
-          : `✗ Ikke bestått — du trenger 85 %. Prøv igjen!`}
+          ? `✓ Passed! ${firstPass && currentLesson < 19 ? `Lesson ${currentLesson + 1} is now unlocked!` : ''}`
+          : `✗ Not yet — need 85%. Try again!`}
       </div>
       <div style="font-family:var(--font);font-size:13px;margin-top:6px;color:var(--ink3)">
-        ${correct} av ${total} riktige
+        ${correct} of ${total} correct
       </div>
     </div>
     <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <button class="btn btn-green" onclick="renderTab('test')">↺ Prøv igjen</button>
-      <button class="btn" onclick="switchLessonTab('study')">📖 Tilbake til Study</button>
+      <button class="btn btn-green" onclick="renderTab('test')">↺ Try again</button>
+      <button class="btn" onclick="switchLessonTab('study')">📖 Back to Study</button>
       ${pass && currentLesson < STATE.unlockedUpTo
         ? `<button class="btn btn-greenm" onclick="openLesson(${currentLesson + 1})" style="background:var(--greenm);color:#fff">
              Neste leksjon →
@@ -399,7 +399,7 @@ function showTestResult(panel) {
         : ''}
     </div>
     <div style="margin-top:16px">
-      <div style="font-family:var(--font);font-size:12px;color:var(--ink3);margin-bottom:8px;letter-spacing:1px">GJENNOMGANG:</div>
+      <div style="font-family:var(--font);font-size:12px;color:var(--ink3);margin-bottom:8px;letter-spacing:1px">REVIEW:</div>
       ${testState.questions.map((q, i) => `
       <div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(26,26,26,0.1);font-family:var(--font);font-size:12px">
         <span style="color:${testState.answers[i] ? 'var(--greenm)' : 'var(--red)'}">
