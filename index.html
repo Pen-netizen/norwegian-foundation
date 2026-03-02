@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Norsk Grunnlag · Norwegian Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/global.css">
+<style>
+/* ===== LAPTOP FRAME ===== */
+.page-bg {
+  width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  background: #c8bfb2;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, #d4c8b8 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, #b8b0a4 0%, transparent 50%);
+}
+
+/* STICKY NOTES on wall */
+.sticky-note {
+  position: fixed;
+  width: 200px;
+  padding: 0;
+  z-index: 1;
+  filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.22));
+}
+.sticky-note .sn-pin {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  margin: 0 auto -7px;
+  position: relative; z-index: 2;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+.sticky-note .sn-body {
+  padding: 10px 12px 14px;
+  border: 2px solid #1a1a1a;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  line-height: 1.55;
+  position: relative;
+}
+.sticky-note .sn-title {
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border-bottom: 1.5px solid currentColor;
+  padding-bottom: 5px;
+  margin-bottom: 7px;
+}
+.sticky-red  { background: #ffe0e0; color: #c0202020; left: calc(50% - 650px); top: 22%; transform: rotate(-2deg); }
+.sticky-red .sn-pin  { background: radial-gradient(circle at 35% 35%, #e04040, #8a0000); }
+.sticky-red .sn-body { background: #ffe0e0; color: #4a1010; }
+.sticky-blue { background: #ddeeff; right: calc(50% - 650px); top: 18%; transform: rotate(1.5deg); }
+.sticky-blue .sn-pin { background: radial-gradient(circle at 35% 35%, #4080d0, #1a3a80); }
+.sticky-blue .sn-body { background: #ddeeff; color: #1a2a4a; }
+.sticky-entry { display: flex; justify-content: space-between; padding: 1px 0; }
+.sticky-entry .sn-no { font-weight: bold; }
+.sticky-entry .sn-en { opacity: 0.75; font-size: 10px; }
+
+/* LAPTOP SHELL */
+.laptop-outer {
+  width: 960px;
+  background: #4a4640;
+  border-radius: 18px 18px 0 0;
+  padding: 18px 22px 0;
+  box-shadow:
+    0 2px 0 #3a3630,
+    0 8px 32px rgba(0,0,0,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  position: relative; z-index: 10;
+}
+.laptop-cam-bar {
+  display: flex; align-items: center; justify-content: center;
+  height: 20px; margin-bottom: 8px;
+}
+.laptop-cam {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #2a2826;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.8), 0 0 0 2px #3a3835;
+}
+.laptop-screen {
+  width: 100%;
+  height: 580px;
+  background: #111;
+  border: 2px solid #2a2826;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+}
+.laptop-base {
+  width: 100%;
+  height: 28px;
+  background: linear-gradient(180deg, #5a5450 0%, #4a4640 100%);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+.laptop-base::after {
+  content: '';
+  display: block;
+  width: 120px; height: 6px;
+  background: #3a3630;
+  border-radius: 0 0 4px 4px;
+  margin: 0 auto;
+}
+
+/* ===== SCREENS ===== */
+.screen { position: absolute; inset: 0; display: none; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ===== BOOT SCREEN ===== */
+#screen-boot {
+  background: #0d1a0f;
+  background-image:
+    radial-gradient(ellipse at 50% 40%, #1a3320 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 32px;
+}
+.boot-logo {
+  text-align: center;
+  transform: rotate(-0.5deg);
+}
+.boot-logo-main {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 52px;
+  color: #85ec57;
+  text-shadow: 3px 3px 0 #1a3a1a, 0 0 30px rgba(133,236,87,0.3);
+  letter-spacing: 2px;
+  display: block;
+}
+.boot-logo-sub {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 15px;
+  color: #47d278;
+  letter-spacing: 4px;
+  display: block;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+.boot-logo-deco {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: #2a5a3a;
+  letter-spacing: 6px;
+  display: block;
+  margin-top: 8px;
+}
+.boot-border {
+  border: 2px solid #1d4a2a;
+  box-shadow: 0 0 0 1px #0d2018, 0 0 20px rgba(71,210,120,0.1);
+  padding: 6px 20px 8px;
+  transform: rotate(0.3deg);
+}
+.boot-choices {
+  display: flex; flex-direction: column; gap: 14px;
+  width: 320px;
+}
+.boot-btn {
+  width: 100%;
+  padding: 14px 20px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 16px;
+  border: 2.5px solid #2a5a3a;
+  background: rgba(20,50,25,0.7);
+  color: #85ec57;
+  cursor: pointer;
+  letter-spacing: 1px;
+  box-shadow: 4px 4px 0 #0d2018;
+  transition: all 0.1s;
+  text-align: left;
+  position: relative;
+}
+.boot-btn::before {
+  content: '▶';
+  margin-right: 12px;
+  font-size: 12px;
+  color: #47d278;
+}
+.boot-btn:hover {
+  background: rgba(71,210,120,0.15);
+  border-color: #47d278;
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #0d2018;
+}
+.boot-load-area {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  width: 320px;
+  animation: fadeIn 0.3s ease;
+}
+.boot-load-area.show { display: flex; }
+.boot-code-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 14px;
+  background: rgba(20,50,25,0.8);
+  border: 2px solid #2a5a3a;
+  color: #c8e69e;
+  outline: none;
+  letter-spacing: 2px;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+}
+.boot-code-input::placeholder { color: #2a5a3a; letter-spacing: 1px; }
+.boot-code-input:focus { border-color: #47d278; background: rgba(71,210,120,0.08); }
+.boot-err {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 12px;
+  color: #fd5757;
+  text-align: center;
+  min-height: 16px;
+}
+.boot-small {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: #2a5a3a;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.boot-back {
+  background: none; border: none;
+  color: #2a5a3a; font-family: 'Patrick Hand', cursive;
+  font-size: 12px; cursor: pointer;
+  text-decoration: underline; letter-spacing: 1px;
+}
+.boot-back:hover { color: #47d278; }
+.boot-blink { animation: blink 1.2s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ===== DESKTOP ===== */
+#screen-desktop {
+  background: var(--green);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, #c8e69e 0%, #b8d88e 50%, #c0e298 100%);
+  position: relative;
+}
+
+/* TOP BAR */
+.topbar {
+  height: 32px;
+  background: rgba(20,30,15,0.82);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center;
+  padding: 0 12px;
+  gap: 14px;
+  border-bottom: 1px solid rgba(133,236,87,0.2);
+  flex-shrink: 0;
+  position: relative; z-index: 100;
+}
+.topbar-brand {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: #85ec57;
+  letter-spacing: 2px;
+}
+.topbar-sep { width: 1px; height: 16px; background: rgba(133,236,87,0.2); }
+.topbar-xp {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: #85ec57;
+  background: rgba(133,236,87,0.12);
+  padding: 2px 10px;
+  border: 1px solid rgba(133,236,87,0.25);
+  border-radius: 2px;
+}
+.topbar-save {
+  margin-left: auto;
+  padding: 3px 12px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  background: rgba(71,210,120,0.15);
+  border: 1px solid rgba(71,210,120,0.4);
+  color: #47d278;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.1s;
+}
+.topbar-save:hover { background: rgba(71,210,120,0.3); }
+
+/* BOTTOM BAR */
+.bottombar {
+  height: 36px;
+  background: rgba(15,25,12,0.85);
+  backdrop-filter: blur(2px);
+  display: flex; align-items: center;
+  padding: 0 14px;
+  border-top: 1px solid rgba(133,236,87,0.15);
+  flex-shrink: 0;
+  position: relative; z-index: 100;
+}
+.music-player {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: #2a5a3a;
+}
+.music-btn {
+  background: none; border: 1px solid #2a5a3a;
+  color: #47d278; font-size: 12px;
+  width: 22px; height: 22px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.1s; padding: 0;
+}
+.music-btn:hover { background: rgba(71,210,120,0.15); border-color: #47d278; }
+.music-label { color: #2a5a3a; font-size: 10px; letter-spacing: 1px; }
+.music-note { font-size: 11px; }
+
+/* DESKTOP AREA */
+.desktop-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* STATS */
+.desktop-stats {
+  position: absolute;
+  bottom: 20px; right: 20px;
+  display: flex; flex-direction: column; gap: 4px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.ds-row {
+  display: flex; gap: 10px; align-items: baseline;
+  font-family: 'Patrick Hand', cursive;
+}
+.ds-label { font-size: 10px; color: #3a7a4a; letter-spacing: 2px; }
+.ds-value { font-size: 20px; color: #2a5a3a; }
+
+/* APP ICONS */
+.icons-cluster {
+  position: absolute;
+  top: 30px; left: 40px;
+  display: flex; flex-direction: column;
+  gap: 24px;
+}
+.app-icon {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; cursor: pointer; width: 72px;
+}
+.app-icon:nth-child(odd)  { transform: rotate(-1deg) translateX(-4px); }
+.app-icon:nth-child(even) { transform: rotate(1.2deg) translateX(6px); }
+.app-icon-img {
+  width: 52px; height: 52px;
+  border: 2.5px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  background: var(--paper);
+  transition: all 0.1s;
+  position: relative;
+}
+.app-icon:hover .app-icon-img {
+  transform: translate(-1px,-2px);
+  box-shadow: 4px 5px 0 var(--ink);
+}
+.app-icon-label {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: var(--ink);
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(200,230,158,0.8);
+  background: rgba(200,230,158,0.6);
+  padding: 1px 5px;
+  border: 1px solid rgba(26,26,26,0.2);
+  border-radius: 1px;
+  white-space: nowrap;
+}
+
+/* ===== WINDOW ===== */
+.window-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.15);
+  display: none; z-index: 50;
+  align-items: center; justify-content: center;
+}
+.window-overlay.open { display: flex; }
+.window-box {
+  width: 820px; height: 480px;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  display: flex; flex-direction: column;
+  transform: rotate(-0.3deg);
+  animation: windowPop 0.18s ease;
+  overflow: hidden;
+}
+@keyframes windowPop {
+  from { transform: rotate(-0.3deg) scale(0.95); opacity: 0.7; }
+  to   { transform: rotate(-0.3deg) scale(1);    opacity: 1; }
+}
+.win-titlebar {
+  height: 30px; flex-shrink: 0;
+  background: var(--paper2);
+  border-bottom: 2px solid var(--ink);
+  display: flex; align-items: center;
+  padding: 0 10px; gap: 8px;
+}
+.win-btn { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--ink); cursor: pointer; flex-shrink: 0; }
+.win-btn-red    { background: var(--red); }
+.win-btn-yellow { background: #ffd060; }
+.win-btn-green  { background: var(--greenb); }
+.win-btn-red:hover { background: #c03030; }
+.win-title {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+  margin-left: 6px;
+}
+.win-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+/* ===== LESSONS APP ===== */
+.lesson-list { padding: 14px 16px; overflow-y: auto; flex: 1; }
+.lesson-list-title {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 18px; font-weight: bold;
+  color: var(--ink); letter-spacing: 1px;
+  margin-bottom: 14px;
+  border-bottom: 2px dashed rgba(26,26,26,0.2);
+  padding-bottom: 8px;
+}
+.lesson-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 12px;
+  margin-bottom: 5px;
+  border: 2px solid var(--ink);
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: all 0.08s;
+  position: relative;
+}
+.lesson-row:nth-child(odd)  { transform: rotate(-0.2deg); }
+.lesson-row:nth-child(even) { transform: rotate(0.15deg); }
+.lesson-row.unlocked:hover {
+  transform: translate(-2px,-2px) rotate(-0.2deg);
+  box-shadow: 5px 5px 0 var(--ink);
+  background: var(--green);
+}
+.lesson-row.locked {
+  opacity: 0.38;
+  cursor: not-allowed;
+  background: #eee;
+  box-shadow: 2px 2px 0 #ccc;
+  border-color: #bbb;
+}
+.lesson-row.locked:nth-child(odd)  { transform: rotate(-0.2deg); }
+.lesson-row.locked:nth-child(even) { transform: rotate(0.15deg); }
+.lesson-num {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 22px; font-weight: bold;
+  color: var(--ink);
+  width: 28px; text-align: center; flex-shrink: 0;
+}
+.lesson-info { flex: 1; }
+.lesson-name  { font-size: 14px; font-weight: bold; color: var(--ink); }
+.lesson-sub   { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+.lesson-badge {
+  font-size: 10px; padding: 2px 7px;
+  border: 1.5px solid var(--ink);
+  background: var(--greenb);
+  letter-spacing: 1px;
+}
+.lesson-badge.locked-badge { background: #ddd; color: #999; border-color: #bbb; }
+.lesson-score {
+  font-size: 11px; color: var(--greenm); font-weight: bold;
+}
+
+/* ===== LESSON WINDOW ===== */
+.lesson-win-body { display: flex; flex: 1; overflow: hidden; }
+.lesson-tabs {
+  width: 110px; flex-shrink: 0;
+  border-right: 2px solid var(--ink);
+  background: var(--paper2);
+  display: flex; flex-direction: column;
+  padding: 8px 6px; gap: 5px;
+}
+.lesson-tab-btn {
+  padding: 10px 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  border: 2px solid var(--ink);
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all 0.08s;
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+.lesson-tab-btn:hover { background: var(--green); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+.lesson-tab-btn.active { background: var(--greenb); box-shadow: 1px 1px 0 var(--ink); transform: translate(1px,1px); }
+.lesson-tab-icon { margin-right: 6px; }
+.lesson-panel { flex: 1; overflow-y: auto; padding: 16px; }
+
+/* STUDY TAB */
+.study-intro {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px; color: var(--ink3); letter-spacing: 1px;
+  margin-bottom: 12px; text-transform: uppercase;
+}
+.study-section-title {
+  font-size: 16px; font-weight: bold;
+  color: var(--ink);
+  border-left: 4px solid var(--greenm);
+  padding-left: 10px;
+  margin: 16px 0 8px;
+}
+.vocab-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+.vocab-table th {
+  font-family: 'Patrick Hand', cursive; font-size: 11px;
+  letter-spacing: 2px; color: var(--ink3);
+  border-bottom: 2px solid var(--ink); padding: 5px 8px;
+  text-align: left; background: var(--paper2);
+}
+.vocab-table td {
+  padding: 7px 8px; font-size: 13px;
+  border-bottom: 1px dashed rgba(26,26,26,0.1);
+  font-family: 'Patrick Hand', cursive;
+}
+.vocab-table td:first-child { font-weight: bold; color: var(--ink); }
+.vocab-table td:nth-child(2) { color: #3a6a4a; }
+.vocab-table td:nth-child(3) { font-size: 11px; color: var(--ink3); font-style: italic; }
+.vocab-table .tts-btn {
+  font-size: 11px; padding: 1px 6px;
+  background: none; border: 1px solid var(--ink);
+  cursor: pointer; color: var(--ink3);
+}
+.vocab-table .tts-btn:hover { background: var(--green); color: var(--ink); }
+.grammar-card {
+  border: 2px solid var(--ink);
+  background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  transform: rotate(-0.2deg);
+}
+.grammar-card:nth-child(even) { transform: rotate(0.3deg); }
+.grammar-card-title { font-size: 14px; font-weight: bold; color: var(--ink); margin-bottom: 8px; }
+.grammar-card-body { font-size: 13px; line-height: 1.7; color: var(--ink); white-space: pre-wrap; }
+.grammar-card-body strong { color: #1a5a2a; }
+.grammar-card-body em { color: #3a7a5a; font-style: normal; }
+.tts-sentence-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 10px;
+  border-bottom: 1px dashed rgba(26,26,26,0.1);
+  font-family: 'Patrick Hand', cursive; font-size: 13px;
+}
+.tts-sentence-row .sno { font-weight: bold; flex: 1; }
+.tts-sentence-row .sen { color: var(--ink3); flex: 1; font-size: 12px; }
+
+/* MINI-GAMES TAB */
+.minigame-picker {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 16px;
+}
+.mg-pick-btn {
+  padding: 7px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 12px;
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+  transition: all 0.08s; letter-spacing: 0.3px;
+}
+.mg-pick-btn:hover { background: var(--green); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+.mg-pick-btn.active { background: var(--greenb); box-shadow: 1px 1px 0 var(--ink); transform: translate(1px,1px); }
+.mg-area { border: 2px solid var(--ink); background: var(--white); padding: 16px; box-shadow: 3px 3px 0 var(--ink); }
+
+/* Flashcard */
+.flashcard {
+  width: 100%; min-height: 140px;
+  border: 2.5px solid var(--ink);
+  background: var(--paper2);
+  box-shadow: 4px 4px 0 var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px;
+  cursor: pointer;
+  transform: rotate(-0.4deg);
+  transition: all 0.15s;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 12px;
+}
+.flashcard:hover { transform: rotate(-0.4deg) translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
+.flashcard .fc-front { font-size: 28px; font-weight: bold; color: var(--ink); font-family: 'Patrick Hand', cursive; }
+.flashcard .fc-back  { font-size: 16px; color: #3a6a4a; font-family: 'Patrick Hand', cursive; }
+.flashcard .fc-note  { font-size: 11px; color: var(--ink3); font-style: italic; }
+.flashcard .fc-hint  { font-size: 11px; color: var(--ink3); position: absolute; bottom: 6px; right: 10px; }
+.fc-progress { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 10px; }
+.fc-pip { width: 10px; height: 10px; border: 1.5px solid var(--ink); background: var(--white); }
+.fc-pip.done { background: var(--greenm); }
+.fc-pip.cur  { background: var(--greenb); }
+.fc-controls { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+/* Fill blank */
+.fb-prompt {
+  font-family: 'Patrick Hand', cursive; font-size: 18px;
+  color: var(--ink); margin-bottom: 14px;
+  background: var(--paper2); border: 2px solid var(--ink);
+  padding: 12px 16px; box-shadow: 3px 3px 0 var(--ink);
+  min-height: 50px; display: flex; align-items: center;
+}
+.fb-blank {
+  display: inline-block; min-width: 80px; height: 28px;
+  border-bottom: 3px solid var(--ink); background: var(--greenb);
+  vertical-align: middle; margin: 0 4px;
+  padding: 2px 8px; font-size: 17px; font-weight: bold;
+}
+.fb-input {
+  width: 100%; padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 18px;
+  border: 2.5px solid var(--ink); background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink); outline: none;
+  color: var(--ink); letter-spacing: 0.5px; margin-bottom: 10px;
+}
+.fb-input:focus { background: #f0f8e8; border-color: var(--greenm); }
+.fb-input.correct { background: #d8f0d0; border-color: var(--greenm); }
+.fb-input.wrong   { background: #fde8e8; border-color: var(--red); animation: shake 0.25s ease; }
+.fb-feedback { font-size: 13px; min-height: 18px; margin-bottom: 8px; font-family: 'Patrick Hand', cursive; }
+.fb-feedback.ok  { color: var(--greenm); }
+.fb-feedback.err { color: var(--red); }
+.fb-hint { font-size: 11px; color: var(--ink3); font-style: italic; }
+
+/* Multiple choice */
+.mc-question { font-size: 16px; font-weight: bold; color: var(--ink); margin-bottom: 14px; font-family: 'Patrick Hand', cursive; }
+.mc-options { display: flex; flex-direction: column; gap: 7px; }
+.mc-opt {
+  padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 14px;
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+  transition: all 0.08s; text-align: left;
+}
+.mc-opt:hover:not([disabled]) { background: var(--green); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+.mc-opt.correct-ans { background: #d8f0d0; border-color: var(--greenm); }
+.mc-opt.wrong-ans   { background: #fde8e8; border-color: var(--red); }
+
+/* Drag-drop */
+.dd-sentence { font-size: 18px; font-family: 'Patrick Hand', cursive; margin-bottom: 14px; min-height: 40px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.dd-slot { min-width: 80px; height: 32px; border-bottom: 3px dashed var(--ink); background: rgba(200,230,158,0.3); display: inline-flex; align-items: center; justify-content: center; padding: 0 8px; cursor: pointer; }
+.dd-slot.filled { background: var(--greenb); border-bottom-style: solid; border-bottom-color: var(--greenm); font-weight: bold; }
+.dd-slot.correct { background: #d8f0d0; }
+.dd-slot.wrong   { background: #fde8e8; animation: shake 0.25s ease; }
+.dd-words { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.dd-word {
+  padding: 6px 12px; font-family: 'Patrick Hand', cursive; font-size: 14px;
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+  transition: all 0.08s;
+}
+.dd-word:hover:not(.used) { background: var(--green); transform: translate(-1px,-1px); }
+.dd-word.selected { background: var(--greenb); border-color: var(--greenm); }
+.dd-word.used { opacity: 0.3; cursor: not-allowed; }
+
+/* Decay indicator */
+.decay-banner {
+  background: #fdf5d0; border: 2px solid #c8a000;
+  padding: 8px 12px; margin-bottom: 12px;
+  font-family: 'Patrick Hand', cursive; font-size: 12px; color: #7a5800;
+  box-shadow: 2px 2px 0 #c8a000;
+}
+
+/* READ TAB */
+.read-extract {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 15px; line-height: 2;
+  color: var(--ink);
+}
+.extract-title {
+  font-size: 18px; font-weight: bold;
+  margin-bottom: 4px;
+}
+.extract-meta { font-size: 11px; color: var(--ink3); margin-bottom: 16px; letter-spacing: 1px; }
+.extract-para { margin-bottom: 16px; }
+.tok { display: inline; }
+.tok.lit { color: var(--ink); }
+.tok.dim { color: rgba(26,26,26,0.18); }
+.tok.click { cursor: pointer; border-bottom: 2px solid var(--greenm); color: #1a5a2a; }
+.tok.click:hover { background: rgba(133,236,87,0.3); }
+.tok.correct-tok { background: rgba(71,210,120,0.4); border-radius: 2px; }
+.tok.wrong-tok   { background: rgba(253,87,87,0.25); border-radius: 2px; }
+.read-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.read-task {
+  background: var(--paper2); border: 2px solid var(--ink);
+  padding: 10px 14px; margin-bottom: 12px;
+  font-family: 'Patrick Hand', cursive; font-size: 13px;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* TEST TAB */
+.test-header { margin-bottom: 14px; }
+.test-title { font-size: 18px; font-weight: bold; font-family: 'Patrick Hand', cursive; }
+.test-sub { font-size: 12px; color: var(--ink3); }
+.test-q-num { font-size: 11px; color: var(--ink3); letter-spacing: 1px; margin-bottom: 6px; font-family: 'Patrick Hand', cursive; }
+.test-question { font-size: 15px; font-weight: bold; color: var(--ink); margin-bottom: 12px; font-family: 'Patrick Hand', cursive; }
+.test-input {
+  width: 100%; padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 16px;
+  border: 2.5px solid var(--ink); background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink); outline: none; margin-bottom: 8px;
+}
+.test-input:focus { border-color: var(--greenm); }
+.test-input.correct { background: #d8f0d0; border-color: var(--greenm); }
+.test-input.wrong   { background: #fde8e8; border-color: var(--red); }
+.test-progress { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 14px; }
+.test-pip { width: 12px; height: 12px; border: 1.5px solid var(--ink); background: var(--white); }
+.test-pip.pass { background: var(--greenm); }
+.test-pip.fail { background: var(--red); }
+.test-result {
+  border: 2.5px solid var(--ink); background: var(--green);
+  box-shadow: 4px 4px 0 var(--ink); padding: 20px;
+  text-align: center; transform: rotate(-0.5deg);
+}
+.test-result-score { font-size: 48px; font-weight: bold; font-family: 'Patrick Hand', cursive; }
+.test-result-msg   { font-size: 16px; font-family: 'Patrick Hand', cursive; margin-top: 4px; }
+.test-result.pass-result { background: var(--greenb); }
+.test-result.fail-result { background: #fde8e8; }
+
+/* ALPHABET APP */
+.alpha-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px; padding: 4px;
+}
+.alpha-card {
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); padding: 10px 8px;
+  text-align: center; cursor: pointer;
+  transition: all 0.08s;
+}
+.alpha-card:nth-child(5n)   { transform: rotate(0.5deg); }
+.alpha-card:nth-child(5n+2) { transform: rotate(-0.4deg); }
+.alpha-card:hover { background: var(--green); transform: translate(-1px,-1px) rotate(0deg) !important; box-shadow: 3px 3px 0 var(--ink); }
+.alpha-card.special { background: var(--paper2); border-color: var(--red); }
+.alpha-letter  { font-size: 28px; font-weight: bold; font-family: 'Patrick Hand', cursive; display: block; }
+.alpha-ipa     { font-size: 10px; color: var(--ink3); display: block; margin-top: 2px; }
+.alpha-example { font-size: 10px; color: #3a6a4a; display: block; }
+.alpha-detail {
+  border: 2px solid var(--ink); background: var(--paper2);
+  box-shadow: 3px 3px 0 var(--ink); padding: 14px;
+  margin-bottom: 14px; display: none;
+}
+.alpha-detail.show { display: block; }
+.alpha-notes { padding: 12px; }
+.alpha-note-card { border: 2px solid var(--ink); background: var(--white); box-shadow: 2px 2px 0 var(--ink); padding: 12px; margin-bottom: 10px; }
+.alpha-note-title { font-size: 13px; font-weight: bold; margin-bottom: 6px; font-family: 'Patrick Hand', cursive; }
+.alpha-note-body  { font-size: 13px; font-family: 'Patrick Hand', cursive; line-height: 1.6; white-space: pre-wrap; }
+
+/* DICTIONARY APP */
+.dict-cats { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px; border-bottom: 2px solid var(--ink); }
+.dict-cat-btn {
+  padding: 6px 12px; font-family: 'Patrick Hand', cursive; font-size: 12px;
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+}
+.dict-cat-btn:hover { background: var(--green); }
+.dict-cat-btn.active { background: var(--greenb); box-shadow: 1px 1px 0 var(--ink); transform: translate(1px,1px); }
+.dict-entries { padding: 12px; overflow-y: auto; flex: 1; }
+.dict-cat-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; font-family: 'Patrick Hand', cursive; border-left: 4px solid var(--greenm); padding-left: 8px; }
+.dict-entry {
+  display: flex; align-items: baseline; gap: 12px; padding: 7px 0;
+  border-bottom: 1px dashed rgba(26,26,26,0.1);
+  font-family: 'Patrick Hand', cursive;
+}
+.dict-no   { font-weight: bold; font-size: 14px; min-width: 140px; color: var(--ink); }
+.dict-en   { font-size: 13px; color: #3a6a4a; flex: 1; }
+.dict-note { font-size: 11px; color: var(--ink3); font-style: italic; }
+.dict-tts  { font-size: 10px; padding: 1px 5px; border: 1px solid var(--ink); background: none; cursor: pointer; color: var(--ink3); }
+
+/* SETTINGS APP */
+.settings-body { padding: 16px; }
+.settings-section {
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 3px 3px 0 var(--ink); padding: 14px;
+  margin-bottom: 14px;
+}
+.settings-section:nth-child(odd) { transform: rotate(-0.2deg); }
+.settings-title { font-size: 15px; font-weight: bold; margin-bottom: 10px; font-family: 'Patrick Hand', cursive; border-bottom: 2px dashed rgba(26,26,26,0.15); padding-bottom: 6px; }
+.settings-label { font-size: 12px; color: var(--ink3); letter-spacing: 1px; margin-bottom: 6px; font-family: 'Patrick Hand', cursive; }
+.save-code-display {
+  width: 100%; padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 14px;
+  background: var(--paper2); border: 2px solid var(--ink);
+  color: var(--ink); letter-spacing: 2px;
+  cursor: text; user-select: all;
+  word-break: break-all; min-height: 40px;
+}
+.settings-note { font-size: 11px; color: var(--ink3); margin-top: 6px; font-family: 'Patrick Hand', cursive; line-height: 1.5; }
+.load-code-input {
+  width: 100%; padding: 10px 14px;
+  font-family: 'Patrick Hand', cursive; font-size: 14px;
+  border: 2px solid var(--ink); background: var(--white);
+  box-shadow: 2px 2px 0 var(--ink); outline: none;
+  letter-spacing: 2px; margin-bottom: 8px;
+}
+.settings-msg { font-size: 12px; min-height: 16px; font-family: 'Patrick Hand', cursive; }
+.settings-msg.ok  { color: var(--greenm); }
+.settings-msg.err { color: var(--red); }
+.stats-display { display: flex; gap: 10px; flex-wrap: wrap; }
+.stat-box {
+  border: 2px solid var(--ink); background: var(--paper2);
+  box-shadow: 2px 2px 0 var(--ink); padding: 8px 14px; text-align: center;
+  font-family: 'Patrick Hand', cursive;
+}
+.stat-box-val { font-size: 28px; font-weight: bold; color: var(--greenm); display: block; }
+.stat-box-lbl { font-size: 10px; color: var(--ink3); letter-spacing: 1px; display: block; }
+
+/* TOAST */
+.toast {
+  position: absolute; bottom: 50px; left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--ink); color: var(--cream);
+  font-family: 'Patrick Hand', cursive; font-size: 13px;
+  padding: 8px 20px; border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: all 0.3s ease; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* UNLOCK FANFARE */
+.unlock-banner {
+  position: absolute; bottom: 50px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--greenb); color: var(--ink);
+  font-family: 'Patrick Hand', cursive; font-size: 15px;
+  padding: 12px 24px; border: 2.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  z-index: 9999; opacity: 0; pointer-events: none;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+.unlock-banner.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- STICKY REFERENCE NOTES -->
+<div class="sticky-note sticky-red" style="width:190px;">
+  <div class="sn-pin" style="background:radial-gradient(circle at 35% 35%,#e04040,#8a0000)"></div>
+  <div class="sn-body" style="background:#ffe0e0;border-color:#c03030;">
+    <div class="sn-title" style="color:#8a0000;border-color:#c03030;">PREPOSISJONER</div>
+    <div class="sticky-entry"><span class="sn-no">PÅ</span><span class="sn-en">on/at/in/by</span></div>
+    <div style="font-size:9px;color:#8a4040;margin-bottom:4px;font-style:italic">Jeg er på jobb. · på norsk</div>
+    <div class="sticky-entry"><span class="sn-no">OM</span><span class="sn-en">about/in/around</span></div>
+    <div style="font-size:9px;color:#8a4040;margin-bottom:4px;font-style:italic">om to dager · snakke om</div>
+    <div class="sticky-entry"><span class="sn-no">TIL</span><span class="sn-en">to/for/until</span></div>
+    <div style="font-size:9px;color:#8a4040;margin-bottom:4px;font-style:italic">gå til butikken · til deg</div>
+    <div class="sticky-entry"><span class="sn-no">I</span><span class="sn-en">in/for/at</span></div>
+    <div style="font-size:9px;color:#8a4040;font-style:italic">i Norge · i dag · i boken</div>
+  </div>
+</div>
+
+<div class="sticky-note sticky-blue" style="width:200px;">
+  <div class="sn-pin" style="background:radial-gradient(circle at 35% 35%,#4080d0,#1a3a80)"></div>
+  <div class="sn-body" style="background:#ddeeff;border-color:#3060b0;">
+    <div class="sn-title" style="color:#1a2a6a;border-color:#3060b0;">GRAMMATIKK</div>
+    <div style="font-size:10px;font-weight:bold;color:#1a2a6a;margin:4px 0 2px">Pronomen:</div>
+    <div style="font-size:10px;color:#2a4a8a;line-height:1.6">jeg · du · han · hun<br>vi · dere · de</div>
+    <div style="font-size:10px;font-weight:bold;color:#1a2a6a;margin:6px 0 2px">Ordstilling (V2):</div>
+    <div style="font-size:10px;color:#2a4a8a;font-style:italic;line-height:1.6">I dag <u>spiser</u> jeg. ← verb 2nd!</div>
+    <div style="font-size:10px;font-weight:bold;color:#1a2a6a;margin:6px 0 2px">IKKE = NOT:</div>
+    <div style="font-size:10px;color:#2a4a8a;font-style:italic">Jeg snakker <u>ikke</u> norsk.<br>Verb → <u>ikke</u> → rest</div>
+  </div>
+</div>
+
+<div class="page-bg">
+  <div>
+    <div class="laptop-outer">
+      <div class="laptop-cam-bar"><div class="laptop-cam"></div></div>
+      <div class="laptop-screen" id="laptopScreen">
+
+        <!-- TOAST -->
+        <div class="toast" id="toastEl"></div>
+        <div class="unlock-banner" id="unlockBanner"></div>
+
+        <!-- ===== BOOT SCREEN ===== -->
+        <div class="screen active" id="screen-boot">
+          <div class="boot-logo">
+            <div class="boot-border">
+              <span class="boot-logo-main">NORSK GRUNNLAG</span>
+              <span class="boot-logo-sub">NORWEGIAN FOUNDATION · A1–A2</span>
+              <span class="boot-logo-deco">BOKMÅL · 19 LEKSJONER <span class="boot-blink">_</span></span>
+            </div>
+          </div>
+          <div class="boot-choices" id="bootChoices">
+            <button class="boot-btn" onclick="bootFresh()">Ny bruker — start fresh</button>
+            <button class="boot-btn" onclick="bootShowLoad()">Last lagret fremgang</button>
+          </div>
+          <div class="boot-load-area" id="bootLoadArea">
+            <input class="boot-code-input" id="bootCodeInput" placeholder="SKRIV KOD HER — skriv inn lagringskoden..." autocomplete="off" autocorrect="off" spellcheck="false">
+            <button class="boot-btn" onclick="bootLoadCode()">▶ Last inn</button>
+            <div class="boot-err" id="bootErr"></div>
+            <button class="boot-back" onclick="bootHideLoad()">← tilbake</button>
+          </div>
+          <div class="boot-small">TRYKK FOR Å BEGYNNE</div>
+        </div>
+
+        <!-- ===== DESKTOP SCREEN ===== -->
+        <div class="screen" id="screen-desktop">
+          <!-- TOP BAR -->
+          <div class="topbar">
+            <span class="topbar-brand">🇳🇴 NORSK</span>
+            <div class="topbar-sep"></div>
+            <div class="topbar-xp" id="topbar-xp">0 XP</div>
+            <button class="topbar-save" onclick="openApp('settings')">💾 LAGRE</button>
+          </div>
+
+          <!-- DESKTOP AREA -->
+          <div class="desktop-area">
+            <!-- Stats -->
+            <div class="desktop-stats" id="desktop-stats"></div>
+
+            <!-- App icons -->
+            <div class="icons-cluster">
+              <div class="app-icon" onclick="openApp('lessons')">
+                <div class="app-icon-img">📚</div>
+                <div class="app-icon-label">Leksjoner</div>
+              </div>
+              <div class="app-icon" onclick="openApp('alphabet')">
+                <div class="app-icon-img">Æ</div>
+                <div class="app-icon-label">Alfabetet</div>
+              </div>
+              <div class="app-icon" onclick="openApp('dictionary')">
+                <div class="app-icon-img">📖</div>
+                <div class="app-icon-label">Ordbok</div>
+              </div>
+              <div class="app-icon" onclick="openApp('settings')">
+                <div class="app-icon-img">⚙️</div>
+                <div class="app-icon-label">Innstillinger</div>
+              </div>
+            </div>
+
+            <!-- WINDOW OVERLAY -->
+            <div class="window-overlay" id="windowOverlay">
+              <div class="window-box" id="windowBox">
+                <div class="win-titlebar">
+                  <div class="win-btn win-btn-red" onclick="closeWindow()" title="Close"></div>
+                  <div class="win-btn win-btn-yellow"></div>
+                  <div class="win-btn win-btn-green"></div>
+                  <span class="win-title" id="winTitle">App</span>
+                </div>
+                <div class="win-body" id="winBody"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM BAR -->
+          <div class="bottombar">
+            <div class="music-player">
+              <button class="music-btn" onclick="toggleMusic()" id="musicBtn" title="Play/pause music">▶</button>
+              <span class="music-note">♪</span>
+              <span class="music-label">LO-FI · NORSK GRUNNLAG</span>
+              <audio id="bgMusic" loop>
+                <source src="audio/lofi-track.mp3" type="audio/mpeg">
+              </audio>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end laptop-screen -->
+    </div><!-- end laptop-outer -->
+    <div class="laptop-base"></div>
+  </div>
+</div>
+
+<!-- DATA FILES -->
+<script>
+// Bootstrap LESSONS_DATA so data files can populate it
+const LESSONS_DATA = {};
+</script>
+<script src="data/lessons/lesson-01.js"></script>
+<script src="data/lessons/lesson-02.js"></script>
+<script src="data/lessons/lesson-03-05.js"></script>
+<script src="data/lessons/lesson-06-10.js"></script>
+<script src="data/lessons/lesson-11-15.js"></script>
+<script src="data/lessons/lesson-16-19.js"></script>
+<script src="data/alphabet.js"></script>
+<script src="data/extract.js"></script>
+
+<!-- APP JS -->
+<script src="js/state.js"></script>
+<script src="js/save.js"></script>
+<script src="js/tts.js"></script>
+<script src="js/apps/minigames.js"></script>
+<script src="js/apps/lessons.js"></script>
+<script src="js/apps/alphabet.js"></script>
+<script src="js/apps/dictionary.js"></script>
+<script src="js/apps/settings.js"></script>
+<script src="js/desktop.js"></script>
+
+</body>
+</html>
